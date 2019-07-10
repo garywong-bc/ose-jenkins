@@ -19,3 +19,4 @@ spec:
     to:
       kind: ImageStreamTag
       name: ootb-jenkins:latest
+      namespace: b7cg3n-tools
