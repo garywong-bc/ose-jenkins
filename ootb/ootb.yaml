@@ -9,14 +9,14 @@ spec:
       uri: https://github.com/garywong-bc/ose-jenkins.git
     type: Git
   strategy:                     
+    type: Source
     sourceStrategy:
       from:
         kind: ImageStreamTag
         name: jenkins:latest
         namespace: openshift
-    type: Source
   output:                       
     to:
       kind: ImageStreamTag
       name: ootb-jenkins:latest
-      namespace: b7cg3n-tools
+      namespace: b7cg3n-deploy
