@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ootb-jenkins
+  name: ootb-jenkins
+spec:
+  ports:
+  - name: 53-tcp
+    port: 53
+    protocol: TCP
+    targetPort: 53
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: 8443-tcp
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+  - name: 50000-tcp
+    port: 50000
+    protocol: TCP
+    targetPort: 50000
+  selector:
+    app: ootb-jenkins
+    deploymentconfig: ootb-jenkins
+  sessionAffinity: None
+  type: ClusterIP

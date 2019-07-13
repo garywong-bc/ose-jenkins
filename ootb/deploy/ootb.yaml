@@ -1,0 +1,70 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: ootb-jenkins
+  name: ootb-jenkins
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: ootb-jenkins
+    deploymentconfig: ootb-jenkins
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: ootb-jenkins
+        deploymentconfig: ootb-jenkins
+    spec:
+      containers:
+      - image: docker-registry.default.svc:5000/b7cg3n-tools/ootb-jenkins@sha256:27e4950b396b13dfc781ddefa08194f9b760806e6e31e94a52bf4b07b2947e70
+        imagePullPolicy: Always
+        name: ootb-jenkins
+        ports:
+        - containerPort: 8443
+          protocol: TCP
+        - containerPort: 50000
+          protocol: TCP
+        - containerPort: 53
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/jenkins
+          name: ootb-jenkins-volume-1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: ootb-jenkins-volume-1
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - ootb-jenkins
+      from:
+        kind: ImageStreamTag
+        name: ootb-jenkins:latest
+        namespace: b7cg3n-tools
+    type: ImageChange
