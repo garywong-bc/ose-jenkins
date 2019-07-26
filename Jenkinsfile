@@ -1,25 +1,23 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'node:6-alpine'
+            args '-p 3000:3000 -p 5000:5000' 
+        }
+    }
+    environment {
+        CI = 'true'
+    }
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
-                pwd
-                echo env.BUILD_DISPLAY_NAME
+                sh 'npm install'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
-                sh 'ls -la'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-                echo env.JOB_NAME
+                sh './jenkins/scripts/test.sh'
             }
         }
     }
